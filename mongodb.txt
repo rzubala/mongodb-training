@@ -64,7 +64,7 @@ mongoimport tv-shows.json -d movieData -c movies --jsonArray --drop - to import 
 
 
 *** FIND ***
-- operators
+- operators: https://docs.mongodb.com/manual/reference/operator/query/
 find({runtime: {$lt: 60}}) - runtime < 60
 $ne, $eq, $gt, $lt, $lte, $gte
 $in, $nin
