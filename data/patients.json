@@ -1,0 +1,26 @@
+[
+    {
+        "firstName": "Jan",
+        "lastName": "Kowalski",
+        "age": 29,
+        "history": [
+            {"disease": "cold", "treatment": "drug 1"}
+        ]
+    },
+    {
+        "firstName": "Jan",
+        "lastName": "Nowak",
+        "age": 39,
+        "history": [
+            {"disease": "flue", "treatment": "drug 2"}
+        ]
+    },
+    {
+        "firstName": "Stefan",
+        "lastName": "Batory",
+        "age": 49,
+        "history": [
+            {"disease": "covid", "treatment": "drug 3"}
+        ]
+    }    
+]

@@ -1,0 +1,94 @@
+show dbs - show databases
+use flights - swith to database flights
+
+db.flightData.insertOne({...}) - insert json
+db.flightData.find() - get data
+
+Create:
+insertOne(data, options)
+insertMany(data, options)
+
+Read:
+find(filter, options)
+findOne(filter, options)    
+
+Update:
+updateOne(filter, data, options)
+updateMany(filter, data, options)
+replaceOne(filter, data, options)
+
+Delete:
+deleteOne(filter, options)
+deleteMany(filter, options)
+
+
+db.flightData.updateOne({distance: 12000}, {$set: {marker: "delete"}}) - set to pass the change
+db.flightData.find({distance: {$gt: 10000}} - greater than 10000
+
+update vs updateMany - update override the entire object
+
+find() - gives cursor not an object
+find().toArray() - gives the objects
+find().forEach() - iterate over the objects
+db.passengers.find().forEach((passengerData) => {printjson(passengerData)}
+
+projection - one can choose only these key values we would like use
+db.passengers.find({}, {name: 1, _id: 0}) - retrieve only names
+
+db.passengers.findOne({name: 'Albert Twostone'}).hobbies - access array
+[ 'sports', 'cooking' ]
+
+db.passengers.find({hobbies: "sports"}) - filter in array
+db.flightData.find({"status.description": 'On-time'}) - filter in subobject
+
+
+To get rid of your data, you can simply load the database you want to get rid of (use databaseName) and then execute db.dropDatabase().
+Similarly, you could get rid of a single collection in a database via db.myCollection.drop().
+
+
+$lookup - aggregate data - book has authors field with an array of id of authors
+db.books.aggregate([{$lookup: {from: "authors", localField: "authors", foreignField: "_id", as: "creators"}}])
+
+db.createCollection("posts", {validator: {$jsonSchema: {bsonType: "object", required: ["title, text, creator, comments"]}}}) - to create collection with schema validation
+db.runCommand({collMod: "posts",   validator: { $jsonSchema: {}}) - to update existing schema
+
+
+db.hobbies.insertMany([{_id: "yoga", name: "yoga"}, {_id: "cooking", name: "cooking"}, {_id: "hiking", name: "hiking"}], {ordered: false}) - turn off ordered insert, continue after error occured
+
+db.persons.insertOne({name: "Chrissy", age: 41}, {writeConcern: {w:0}}) - does not wait for  write 
+db.persons.insertOne({name: "Michael", age: 41}, {writeConcern: {w:1, j: true}}) - wait till it's written to journal
+db.persons.insertOne({name: "Aliya", age: 22}, {writeConcern: {w:1, j: true, wtimeout: 1}}) - write timeout
+
+
+mongoimport tv-shows.json -d movieData -c movies --jsonArray --drop - to import data from json file
+
+
+*** FIND ***
+- operators
+find({runtime: {$lt: 60}}) - runtime < 60
+$ne, $eq, $gt, $lt, $lte, $gte
+$in, $nin
+find({runtime: {$in: [30, 42]}}) - runtine == 30 or runtime == 42
+
+find({$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}] }) - rating.average < 5 or rating.average > 9.3
+$nor = not or
+
+$and
+find({ $and: [{ "rating.average": { $gt: 9 } }, { "genres": "Drama" }] })
+the same as:
+find({"rating.average": {$gt: 9}, genres: "Drama"})
+
+find({runtime: {$not: {$eq: 60}}}) - != 60
+
+
+find({age: {$exists: true}} - all documents that have age
+find({age: {$exists: true, $ne: null}}) - all document with age and not null age
+find({phone: {$type: "number"}}) - all documents that have phone as number
+
+
+find({summary: {$regex: /musical/}}) - regex
+
+
+
+        
+
