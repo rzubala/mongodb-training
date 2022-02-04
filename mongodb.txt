@@ -55,6 +55,13 @@ db.runCommand({collMod: "posts",   validator: { $jsonSchema: {}}) - to update ex
 
 
 *** INSERT ***
+    insertOne(): https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/
+    insertMany(): https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/
+    Atomicity: https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity
+    Write Concern: https://docs.mongodb.com/manual/reference/write-concern/
+    Using mongoimport: https://docs.mongodb.com/manual/reference/program/mongoimport/index.html
+
+
 db.hobbies.insertMany([{_id: "yoga", name: "yoga"}, {_id: "cooking", name: "cooking"}, {_id: "hiking", name: "hiking"}], {ordered: false}) - turn off ordered insert, continue after error occured
 
 db.persons.insertOne({name: "Chrissy", age: 41}, {writeConcern: {w:0}}) - does not wait for  write 
@@ -65,7 +72,11 @@ mongoimport tv-shows.json -d movieData -c movies --jsonArray --drop - to import 
 
 
 *** FIND ***
-- operators: https://docs.mongodb.com/manual/reference/operator/query/
+    https://docs.mongodb.com/manual/reference/method/db.collection.find/
+
+    * operators *
+    https://docs.mongodb.com/manual/reference/operator/query/
+
 find({runtime: {$lt: 60}}) - runtime < 60
 $ne, $eq, $gt, $lt, $lte, $gte
 $in, $nin
@@ -98,5 +109,24 @@ find({"genre": {$all: ["action", "thriller"]}}) - objects that have action of th
 find({hobbies: {$elemMatch: {title: "Sports", frequency: {$gte: 3}}}}) - documents where item array has title Sports and frequence >= 3
 find({ratings: {$elemMatch: {$gt: 8, $lt: 10}}}) - element > 8 and < 10
 
+    * cursor *
+    https://docs.mongodb.com/manual/tutorial/iterate-a-cursor/
+const dataCursor = db.movies.find() - get cursor
+dataCursor.next() - get next document
+dataCursor.hasNext() - check if there is next document
+dataCursor.forEach((doc) => {printjson(doc)}) - loop over all documents
+find().sort({"rating.average": -1}) - sort DESC, (-1: DESC, 1: ASC)
+find().skip(10) - skip first 10 documents
+find().limit(10) - retrieve only 10
+
+    * projection *
+find({}, {name: 1, genres: 1, runtime: 1, rating: 1, _id: 0}) - retrieve only name, genres, ... but not _id
+find({genres: "Drama"}, {"genres.$": 1}) - display only genres: Drama, genres is an array
+find({genres: "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}}) - display only genres: Horror
+find({genres: "Drama"}, {genres: {$slice: 2}, name: 1} - only first to genres
+find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}) - skip first, limit 2
+
+
+*** UPDATE ***
 
 
