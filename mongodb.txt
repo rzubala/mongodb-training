@@ -130,4 +130,21 @@ find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}) - skip first, limit
 *** UPDATE ***
     https://docs.mongodb.com/manual/tutorial/update-documents/
     
+updateOne({name: "Manuel"}, {$inc: {age: 1}}) - age++
+updateOne({name: "Chris"}, {$min: {age: 38}}) - only update when new age is lower than current
+$max -||-
+updateOne({name: "Chris"}, {$mul: {age: 1.1}}) - age = age * 1.1
+updateMany({isSporty: true}, {$unset: {phone: ""}}) - remove phone field from documents
+updateMany({}, {$rename: {age: "totalAge"}}) - rename field from age to totalAge
+updateOne({name: "Maria"}, {$set: {age: 29, hobbies: [{title: "Good food", frequency: 3}], isSporty: true}}, {upsert: true}) - insert document when not exists
+updateMany({hobbies: {$elemMatch: {title: "Sports", frequency: {$gte: 3}}}}, {$set: {"hobbies.$.highFrequency": true}}) - add field highFrequency to subobject in array hobbies
+updateMany({totalAge: {$gt: 30}}, {$inc: {"hobbies.$[].frequency": -1}}) - update all subobjects in an array
+updateMany({"hobbies.frequency": {$gt: 2}}, {$set: {"hobbies.$[el].goodFrequency": true}}, {arrayFilters: [{"el.frequency": {$gt: 2}}]}) - update only subject with additional filter for el
+updateOne({name: "Maria"}, {$push: {hobbies: {title: "Sports", frequency: 2}}}) - push new item to array hobbies
+updateOne({name: "Maria"}, {$addToSet: {hobbies: {title: "Hiking", frequency: 2}}}) - push new item when does not exists
+updateOne({name: "Maria"}, {$push: {hobbies: {$each: [{title: "Good wine", frequency: 1}, {title: "Higing", frequency: 2}]}}}) - push many items
+updateOne({name: "Maria"}, {$push: {hobbies: {$each: [{title: "Good wine", frequency: 1}, {title: "Higing", frequency: 2}], $sort: {frequency: -1}, $slice: 1}}}) - sort before adding, and limit the number of items to add
+updateOne({name: "Maria"}, {$pull: {hobbies: {title: "Hiking"}}}) - remove items Hiking from hobbies array
+updateOne({name: "Chris"}, {$pop: {hobbies: 1}}) - remove last item, for -1 remove first
+
 
