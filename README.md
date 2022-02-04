@@ -1,25 +1,27 @@
-show dbs - show databases
-use flights - swith to database flights
+*Basic commands*
 
-db.flightData.insertOne({...}) - insert json
-db.flightData.find() - get data
+`show dbs` - show databases
+`use flights` - swith to database flights
+
+`db.flightData.insertOne({...})` - insert json
+`db.flightData.find()` - get data
 
 Create:
-insertOne(data, options)
-insertMany(data, options)
+`insertOne(data, options)`
+`insertMany(data, options)`
 
 Read:
-find(filter, options)
-findOne(filter, options)    
+`find(filter, options)`
+`findOne(filter, options)`
 
 Update:
-updateOne(filter, data, options)
-updateMany(filter, data, options)
-replaceOne(filter, data, options)
+`updateOne(filter, data, options)`
+`updateMany(filter, data, options)`
+`replaceOne(filter, data, options)`
 
 Delete:
-deleteOne(filter, options)
-deleteMany(filter, options)
+`deleteOne(filter, options)`
+`deleteMany(filter, options)`
 
 
 db.flightData.updateOne({distance: 12000}, {$set: {marker: "delete"}}) - set to pass the change
@@ -49,16 +51,16 @@ Similarly, you could get rid of a single collection in a database via db.myColle
 $lookup - aggregate data - book has authors field with an array of id of authors
 db.books.aggregate([{$lookup: {from: "authors", localField: "authors", foreignField: "_id", as: "creators"}}])
 
-*** SCHEMA ***
+**SCHEMA**
 db.createCollection("posts", {validator: {$jsonSchema: {bsonType: "object", required: ["title, text, creator, comments"]}}}) - to create collection with schema validation
 db.runCommand({collMod: "posts",   validator: { $jsonSchema: {}}) - to update existing schema
 
 
-*** INSERT ***
-    insertOne(): https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/
-    insertMany(): https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/
-    Atomicity: https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity
-    Write Concern: https://docs.mongodb.com/manual/reference/write-concern/
+**INSERT**
+    [insertOne()](https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/)
+    [insertMany()]https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/)
+    [Atomicity](https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity)
+    [Write Concern](https://docs.mongodb.com/manual/reference/write-concern/)
     Using mongoimport: https://docs.mongodb.com/manual/reference/program/mongoimport/index.html
 
 
@@ -71,7 +73,7 @@ db.persons.insertOne({name: "Aliya", age: 22}, {writeConcern: {w:1, j: true, wti
 mongoimport tv-shows.json -d movieData -c movies --jsonArray --drop - to import data from json file
 
 
-*** FIND ***
+**FIND**
     https://docs.mongodb.com/manual/reference/method/db.collection.find/
 
     * operators *
@@ -127,7 +129,7 @@ find({genres: "Drama"}, {genres: {$slice: 2}, name: 1} - only first to genres
 find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}) - skip first, limit 2
 
 
-*** UPDATE ***
+**UPDATE**
     https://docs.mongodb.com/manual/tutorial/update-documents/
     
 updateOne({name: "Manuel"}, {$inc: {age: 1}}) - age++
