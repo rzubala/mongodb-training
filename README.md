@@ -112,6 +112,7 @@ the same as:\
 
 ## cursor
 [docs](https://docs.mongodb.com/manual/tutorial/iterate-a-cursor/)
+
 `const dataCursor = db.movies.find()` get cursor\
 `dataCursor.next()` get next document\
 `dataCursor.hasNext()` check if there is next document\
@@ -121,12 +122,11 @@ the same as:\
 `find().limit(10)` retrieve only 10
 
 ## projection
-find({}, {name: 1, genres: 1, runtime: 1, rating: 1, _id: 0}): retrieve only name, genres, ... but not _id
-find({genres: "Drama"}, {"genres.$": 1}): display only genres: Drama, genres is an array
-find({genres: "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}}): display only genres: Horror
-find({genres: "Drama"}, {genres: {$slice: 2}, name: 1}: only first to genres
-find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}): skip first, limit 2
-
+`find({}, {name: 1, genres: 1, runtime: 1, rating: 1, _id: 0})` retrieve only name, genres, ... but not _id\
+`find({genres: "Drama"}, {"genres.$": 1})` display only genres: Drama, genres is an array\
+`find({genres: "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}})` display only genres: Horror\
+`find({genres: "Drama"}, {genres: {$slice: 2}, name: 1}` only first to genres\
+`find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1})` skip first, limit 2
 
 # UPDATE
 [update](https://docs.mongodb.com/manual/tutorial/update-documents/)
@@ -134,7 +134,7 @@ find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}): skip first, limit 
 `updateOne({name: "Manuel"}, {$inc: {age: 1}})` age++\
 `updateOne({name: "Chris"}, {$min: {age: 38}})` only update when new age is lower than current\
 `$max`\
-`updateOne({name: "Chris"}, {$mul: {age: 1.1}}): age = age * 1.1
+`updateOne({name: "Chris"}, {$mul: {age: 1.1}})` age = age * 1.1\
 `updateMany({isSporty: true}, {$unset: {phone: ""}})` remove phone field from documents\
 `updateMany({}, {$rename: {age: "totalAge"}})` rename field from age to totalAge\
 `updateOne({name: "Maria"}, {$set: {age: 29, hobbies: [{title: "Good food", frequency: 3}], isSporty: true}}, {upsert: true})` insert document when not exists\
