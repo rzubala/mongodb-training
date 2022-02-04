@@ -153,4 +153,7 @@ the same as:\
 `updateOne({name: "Maria"}, {$pull: {hobbies: {title: "Hiking"}}})` remove items Hiking from hobbies array\
 `updateOne({name: "Chris"}, {$pop: {hobbies: 1}})` remove last item, for -1 remove first
 
+# DELETE
+[docs](https://docs.mongodb.com/manual/tutorial/remove-documents/)
+
 
