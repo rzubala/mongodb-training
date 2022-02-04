@@ -52,7 +52,7 @@ projection: one can choose only these key values we would like use\
 `db.books.aggregate([{$lookup: {from: "authors", localField: "authors", foreignField: "_id", as: "creators"}}])`
 
 # SCHEMA
-`db.createCollection("posts", {validator: {$jsonSchema: {bsonType: "object", required: ["title, text, creator, comments"]}}})`:to create collection with schema validation\
+`db.createCollection("posts", {validator: {$jsonSchema: {bsonType: "object", required: ["title, text, creator, comments"]}}})` to create collection with schema validation\
 `db.runCommand({collMod: "posts",   validator: { $jsonSchema: {}})` to update existing schema
 
 
