@@ -57,10 +57,10 @@ projection: one can choose only these key values we would like use\
 
 
 # INSERT
-[insertOne()](https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/)
-[insertMany()](https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/)
-[Atomicity](https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity)
-[Write Concern](https://docs.mongodb.com/manual/reference/write-concern/)
+[insertOne()](https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/)\
+[insertMany()](https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/)\
+[Atomicity](https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity)\
+[Write Concern](https://docs.mongodb.com/manual/reference/write-concern/)\
 [Using mongoimport](https://docs.mongodb.com/manual/reference/program/mongoimport/index.html)
 
 
@@ -79,20 +79,19 @@ projection: one can choose only these key values we would like use\
 ## operators
 [docs](https://docs.mongodb.com/manual/reference/operator/query/)
 
-find({runtime: {$lt: 60}}): runtime < 60
-$ne, $eq, $gt, $lt, $lte, $gte
-$in, $nin
-find({runtime: {$in: [30, 42]}}): runtine == 30 or runtime == 42
+`find({runtime: {$lt: 60}})` runtime < 60\
+`$ne, $eq, $gt, $lt, $lte, $gte`\
+`$in, $nin`\
+`find({runtime: {$in: [30, 42]}})` runtine == 30 or runtime == 42
 
-find({$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}] }): rating.average < 5 or rating.average > 9.3
-$nor = not or
+`find({$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}] })`rating.average < 5 or rating.average > 9.3\
+`$nor` = not or
 
-$and
-find({ $and: [{ "rating.average": { $gt: 9 } }, { "genres": "Drama" }] })
-the same as:
-find({"rating.average": {$gt: 9}, genres: "Drama"})
-
-find({runtime: {$not: {$eq: 60}}}): != 60
+`$and`\
+`find({ $and: [{ "rating.average": { $gt: 9 } }, { "genres": "Drama" }] })`\
+the same as:\
+`find({"rating.average": {$gt: 9}, genres: "Drama"})`\
+`find({runtime: {$not: {$eq: 60}}})` != 60
 
 
 `find({age: {$exists: true}}` all documents that have age\
