@@ -128,5 +128,6 @@ find({genres: "Drama"}, {genres: {$slice: [1, 2]}, name: 1}) - skip first, limit
 
 
 *** UPDATE ***
-
+    https://docs.mongodb.com/manual/tutorial/update-documents/
+    
 
