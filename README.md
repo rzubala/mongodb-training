@@ -1,46 +1,46 @@
 # Basic commands
 
-`show dbs`: show databases__
-`use flights`: swith to database flights__
+`show dbs`: show databases\
+`use flights`: swith to database flights\
 
-`db.flightData.insertOne({...})`: insert json__
-`db.flightData.find()`: get data__
+`db.flightData.insertOne({...})`: insert json\
+`db.flightData.find()`: get data
 
 ## Create:
-`insertOne(data, options)`__
-`insertMany(data, options)`__
+`insertOne(data, options)`\
+`insertMany(data, options)`
 
 ## Read:
-`find(filter, options)`__
-`findOne(filter, options)`__
+`find(filter, options)`\
+`findOne(filter, options)`
 
 ## Update:
-`updateOne(filter, data, options)`__
-`updateMany(filter, data, options)`__
-`replaceOne(filter, data, options)`__
+`updateOne(filter, data, options)`\
+`updateMany(filter, data, options)`\
+`replaceOne(filter, data, options)`
 
 ## Delete:
-`deleteOne(filter, options)`__
-`deleteMany(filter, options)`__
+`deleteOne(filter, options)`\
+`deleteMany(filter, options)`
 
 
-`db.flightData.updateOne({distance: 12000}, {$set: {marker: "delete"}})`: set to pass the change__
-`db.flightData.find({distance: {$gt: 10000}}`: greater than 10000__
+`db.flightData.updateOne({distance: 12000}, {$set: {marker: "delete"}})`: set to pass the change\
+`db.flightData.find({distance: {$gt: 10000}}`: greater than 10000
 
 update vs updateMany: update override the entire object
 
-`find()`: gives cursor not an object__
-`find().toArray()`: gives the objects__
-`find().forEach()`: iterate over the objects__
-`db.passengers.find().forEach((passengerData) => {printjson(passengerData)}`__
+`find()`: gives cursor not an object\
+`find().toArray()`: gives the objects\
+`find().forEach()`: iterate over the objects\
+`db.passengers.find().forEach((passengerData) => {printjson(passengerData)}`
 
-projection: one can choose only these key values we would like use__
-`db.passengers.find({}, {name: 1, _id: 0})`: retrieve only names__
+projection: one can choose only these key values we would like use\
+`db.passengers.find({}, {name: 1, _id: 0})`: retrieve only names
 
-`db.passengers.findOne({name: 'Albert Twostone'}).hobbies`: access array__
+`db.passengers.findOne({name: 'Albert Twostone'}).hobbies`: access array
 [ 'sports', 'cooking' ]
 
-`db.passengers.find({hobbies: "sports"})`: filter in array__
+`db.passengers.find({hobbies: "sports"})`: filter in array\
 `db.flightData.find({"status.description": 'On-time'})`: filter in subobject
 
 
@@ -48,8 +48,8 @@ To get rid of your data, you can simply load the database you want to get rid of
 Similarly, you could get rid of a single collection in a database via `db.myCollection.drop()`.
 
 
-`$lookup`: aggregate data: book has authors field with an array of id of authors__
-`db.books.aggregate([{$lookup: {from: "authors", localField: "authors", foreignField: "_id", as: "creators"}}])`__
+`$lookup`: aggregate data: book has authors field with an array of id of authors\
+`db.books.aggregate([{$lookup: {from: "authors", localField: "authors", foreignField: "_id", as: "creators"}}])`
 
 # SCHEMA
 `db.createCollection("posts", {validator: {$jsonSchema: {bsonType: "object", required: ["title, text, creator, comments"]}}})`: to create collection with schema validation
