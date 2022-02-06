@@ -179,3 +179,9 @@ sort by gender
 ### Query convert by index
 `db.customers.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})` there is an index on name, and we are returning only name: totalDocsExamined: 0
 
+### Multikey index
+when index is on array or field on embeded document which is item in array
+
+
+
+
