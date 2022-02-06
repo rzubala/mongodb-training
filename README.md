@@ -142,6 +142,7 @@ the same as:\
 `updateOne({name: "Maria"}, {$set: {age: 29, hobbies: [{title: "Good food", frequency: 3}], isSporty: true}}, {upsert: true})` insert document when not exists\
 `updateMany({hobbies: {$elemMatch: {title: "Sports", frequency: {$gte: 3}}}}, {$set: {"hobbies.$.highFrequency": true}})` add field highFrequency to subobject in array hobbies
 
+### Arrays
 `updateMany({totalAge: {$gt: 30}}, {$inc: {"hobbies.$[].frequency": -1}})` update all subobjects in an array\
 `updateMany({"hobbies.frequency": {$gt: 2}}, {$set: {"hobbies.$[el].goodFrequency": true}}, {arrayFilters: [{"el.frequency": {$gt: 2}}]})` update only subject with additional filter for el
 
@@ -156,4 +157,25 @@ the same as:\
 # DELETE
 [docs](https://docs.mongodb.com/manual/tutorial/remove-documents/)
 
+# INDEXES
+
+`db.contacts.explain().find({"dob.age": {$gt: 60}})` to display stats of query\
+`db.contacts.explain("executionStats").find({"dob.age": {$gt: 60}})` to display detailed stats of query
+
+`db.contacts.createIndex({"dob.age": 1})` create index in asc order, -1 desc\
+`db.contacts.dropIndex({"dob.age": 1})` to remove the above index
+
+`db.contacts.createIndex({"dob.age": 1, gender: 1})` compound index with 2 fields, it works for filtering by age and gender and by age (most left part of index) and
+sort by gender
+
+`db.contacts.getIndexes()` retrieve all indexes\
+`db.contacts.createIndex({email: 1}, {unique: true})` to create index and requires the value to be unique\
+`db.users.createIndex({email: 1}, {unique: true, partialFilterExpression: {email: {$exists: true}}})` email is required but consider only data where email exists\
+`db.contacts.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` partial index for age with data where gender is male
+
+### TTL Time to live
+`db.sessions.createIndex({createdAt: 1}, {expireAfterSeconds: 10})` index for only 10 seconds than the document is removed
+
+### Query convert by index
+`db.customers.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})` there is an index on name, and we are returning only name: totalDocsExamined: 0
 
