@@ -158,6 +158,7 @@ the same as:\
 [docs](https://docs.mongodb.com/manual/tutorial/remove-documents/)
 
 # INDEXES
+[partialFilterExpressions](https://docs.mongodb.com/manual/core/index-partial/)
 
 `db.contacts.explain().find({"dob.age": {$gt: 60}})` to display stats of query\
 `db.contacts.explain("executionStats").find({"dob.age": {$gt: 60}})` to display detailed stats of query
@@ -182,6 +183,21 @@ sort by gender
 ### Multikey index
 when index is on array or field on embeded document which is item in array
 
+### Text index
+`db.products.createIndex({description: "text"})` text index where word in description are splitted\
+`db.products.explain().find({$text: {$search: "awesome"}})` search by text. One can be only one text index by collection. It looks for documents where any of the
+search words exists\
+`db.products.find({$text: {$search: "\"red book\""}})` to search for the exact phrase
 
+`db.products.find({$text: {$search: "awsome t-shirt"}}, {score: {$meta: "textScore"}})` to display score\
+`db.products.find({$text: {$search: "awsome t-shirt"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})` to sort by score
 
+`db.products.createIndex({title: "text", description: "text"})` one can create index which merges text fields
+
+`db.products.find({$text: {$search: "awsome -t-shirt"}})` minus before means that the world should be excluded (here t-shirt)\
+`db.products.createIndex({title: "text", description: "text"}, {default_language: "english", weights: {title:1, description: 10}})` one can define default language
+and weights of the fields to calculate the score
+
+### Background indexes
+`db.ratings.createIndex({age: 1}, {background: true})`
 
