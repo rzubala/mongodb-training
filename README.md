@@ -202,7 +202,7 @@ and weights of the fields to calculate the score
 `db.ratings.createIndex({age: 1}, {background: true})`
 
 # Geospatial data
-[docs](https://docs.mongodb.com/manual/geospatial-queries/)
+[docs](https://docs.mongodb.com/manual/geospatial-queries/)\
 [Geospatial Query Operators](https://docs.mongodb.com/manual/reference/operator/query-geospatial/)
 
 `db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})` GeoJson syntax
@@ -227,4 +227,8 @@ min distance radius in sorted way\
 `db.areas.find({area: {$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.76992]}}}})` check if point is inside area
 
 # Aggregation
+[Docs](https://docs.mongodb.com/manual/core/aggregation-pipeline/)\
+[$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
+
+### Pipeline
 
