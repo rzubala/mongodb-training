@@ -226,3 +226,5 @@ min distance radius in sorted way\
 `db.areas.insertOne({name: "Golden Gate Park", area: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}})` insert area into the database\
 `db.areas.find({area: {$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.76992]}}}})` check if point is inside area
 
+# Aggregation
+
