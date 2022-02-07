@@ -201,3 +201,26 @@ and weights of the fields to calculate the score
 ### Background indexes
 `db.ratings.createIndex({age: 1}, {background: true})`
 
+# Geospatial data
+
+`db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})` GeoJson syntax\
+
+### index
+`db.places.createIndex({location: "2dsphere"})` index is needed in order to use geo query
+
+### geo query
+`db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}}}})` geo query\
+`db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}, $maxDistance: 500, $minDistance: 10}}})` find places with the max and
+min distance radius in sorted way\
+`db.places.find({location: {$geoWithin: {$centerSphere: [[-122.46203, 37.77286], 1 / 6378.1]}}})` find places in radius 1km from center in unsorted order
+
+### polygon
+`const p1=[-122.4547, 37.77473]`\
+`const p2=[-122.45303, 37.76641]`\
+`const p3=[-122.51026, 37.76411]`\
+`const p4=[-122.51088, 37.77131]`
+
+`db.places.find({location: {$geoWithin: {$geometry: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}}}})` query for all places inside the polygon\
+`db.areas.insertOne({name: "Golden Gate Park", area: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}})` insert area into the database\
+`db.areas.find({area: {$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.76992]}}}})` check if point is inside area
+
