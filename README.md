@@ -202,8 +202,10 @@ and weights of the fields to calculate the score
 `db.ratings.createIndex({age: 1}, {background: true})`
 
 # Geospatial data
+[docs](https://docs.mongodb.com/manual/geospatial-queries/)
+[Geospatial Query Operators](https://docs.mongodb.com/manual/reference/operator/query-geospatial/)
 
-`db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})` GeoJson syntax\
+`db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})` GeoJson syntax
 
 ### index
 `db.places.createIndex({location: "2dsphere"})` index is needed in order to use geo query
