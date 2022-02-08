@@ -21,8 +21,8 @@ findOne(filter, options)
 
 ## Update:
 ```js
-updateOne(filter, data, options)`
-updateMany(filter, data, options)`
+updateOne(filter, data, options)
+updateMany(filter, data, options)
 replaceOne(filter, data, options)
 ```
 
@@ -45,11 +45,17 @@ greater than 10000
 update vs updateMany: update override the entire object
 
 ```js
-find()` gives cursor not an object
+find()
+```
+ gives cursor not an object
 ```js
-find().toArray()` gives the objects
+find().toArray()
+```
+gives the objects
 ```js
-find().forEach()` iterate over the objects
+find().forEach()
+```
+iterate over the objects
 ```js
 db.passengers.find().forEach((passengerData) => {printjson(passengerData)}
 ```
@@ -513,12 +519,15 @@ concat first and last name to full name
 
 ```js
 db.persons.aggregate([
-  {$project: {_id: 0, name: 1, email: 1, location: {type: "Point", 
+  {$project: {_id: 0, name: 1, email: 1, 
+    birthdate: {$convert: {input: "$dob.date", to: "date"}},
+    age: "$dob.age",
+    location: {type: "Point", 
     coordinates: [
       { $convert: {input: "$location.coordinates.longitude", to: "double", onError: 0.0, onNull: 0.0}}, 
       { $convert: {input: "$location.coordinates.latitude", to: "double", onError: 0.0, onNull: 0.0}}, 
     ]}}},
-  {$project: {gender: 1, email: 1, location: 1,
+  {$project: {gender: 1, email: 1, location: 1, birthdate: 1, age: 1,
     fullName: {$concat: 
     [
       { $toUpper: { $substrCP: ["$name.first", 0, 1] } },
@@ -532,6 +541,7 @@ db.persons.aggregate([
 ```
 cascade projection:
 - convert the location to GeoJson and convert string to number
+- convert string to date
 - concat first and last name to full name and covert first letter to uppercase
 
 
