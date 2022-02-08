@@ -231,7 +231,7 @@ min distance radius in sorted way\
 [$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
 
 ### Pipeline
-```
+```js
 db.persons.aggregate([
     {$match: {gender: 'female'}}
 ])
