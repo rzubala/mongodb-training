@@ -242,3 +242,29 @@ match - filtering step\
 group - group by state and sum number of persons by state\
 sort - sort the output in descending order
 
+`{$group: {_id: { gender: "$gender"}, totalPersons: {$sum: 1}, averageAge: {$avg: "$dob.age"}}},` group by gender and sum persons and calculate average
+
+### Projection
+```js
+db.persons.aggregate([
+    {$project: { _id: 0, gender: 1, fullName: {$concat: ["$name.first", " ", "$name.last"]}}}
+])
+```
+concat first and last name to full name
+
+```js
+db.persons.aggregate([{
+    $project: {_id: 0, gender: 1,  fullName: {$concat: 
+      [
+        { $toUpper: { $substrCP: ["$name.first", 0, 1] } },
+        { $substrCP: ["$name.first", 1, { $subtract: [ {$strLenCP: "$name.first"}, 1 ] }] },
+        " ",
+        { $toUpper: { $substrCP: ["$name.last", 0, 1] } },
+        { $substrCP: ["$name.last", 1, { $subtract: [ {$strLenCP: "$name.last"}, 1 ]}] },
+      ],
+    }, },
+}, ]);
+```
+concat first and last name to full name and covert first letter to uppercase
+
+
