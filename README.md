@@ -6,7 +6,7 @@
 To get rid of your data, you can simply load the database you want to get rid of (`use databaseName`) and then execute `db.dropDatabase()`.
 Similarly, you could get rid of a single collection in a database via `db.myCollection.drop()`.
 
-`db.flightData.insertOne({...})`insert json\
+`db.flightData.insertOne({...})` insert json\
 `db.flightData.find()` get data
 
 ## Create:
@@ -15,20 +15,22 @@ Similarly, you could get rid of a single collection in a database via `db.myColl
 
 ## Read:
 ```js
-find(filter, options)`\
-```js
-findOne(filter, options)`
+find(filter, options)
+findOne(filter, options)
+```
 
 ## Update:
 ```js
-updateOne(filter, data, options)`\
-```js
-updateMany(filter, data, options)`\
-`replaceOne(filter, data, options)`
+updateOne(filter, data, options)`
+updateMany(filter, data, options)`
+replaceOne(filter, data, options)
+```
 
 ## Delete:
-`deleteOne(filter, options)`\
-`deleteMany(filter, options)`
+```js
+deleteOne(filter, options)
+deleteMany(filter, options)
+```
 
 
 ```js
@@ -43,9 +45,9 @@ greater than 10000
 update vs updateMany: update override the entire object
 
 ```js
-find()` gives cursor not an object\
+find()` gives cursor not an object
 ```js
-find().toArray()` gives the objects\
+find().toArray()` gives the objects
 ```js
 find().forEach()` iterate over the objects
 ```js
