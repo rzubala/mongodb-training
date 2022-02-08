@@ -233,8 +233,12 @@ min distance radius in sorted way\
 ### Pipeline
 ```js
 db.persons.aggregate([
-    {$match: {gender: 'female'}}
+    {$match: {gender: 'female'}},
+    {$group: {_id: { state: "$location.state" }, totalPersons: { $sum: 1 } }},
+    {$sort: {totalPersons: -1}}
 ])
 ```
-match - filtering step
+match - filtering step\
+group - group by state and sum number of persons by state\
+sort - sort the output in descending order
 
