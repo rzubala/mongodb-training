@@ -195,7 +195,10 @@ search words exists\
 `db.products.createIndex({title: "text", description: "text"})` one can create index which merges text fields
 
 `db.products.find({$text: {$search: "awsome -t-shirt"}})` minus before means that the world should be excluded (here t-shirt)\
-`db.products.createIndex({title: "text", description: "text"}, {default_language: "english", weights: {title:1, description: 10}})` one can define default language
+```js
+db.products.createIndex({title: "text", description: "text"}, {default_language: "english", weights: {title:1, description: 10}})
+```
+one can define default language
 and weights of the fields to calculate the score
 
 ### Background indexes
@@ -205,16 +208,25 @@ and weights of the fields to calculate the score
 [docs](https://docs.mongodb.com/manual/geospatial-queries/)\
 [Geospatial Query Operators](https://docs.mongodb.com/manual/reference/operator/query-geospatial/)
 
-`db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})` GeoJson syntax
+```js
+db.places.insertOne({name: "California Academy of Sciences", location: {type: "Point", coordinates: [-122.4724356, 37.7672544]}})
+```
+GeoJson syntax
 
 ### index
 `db.places.createIndex({location: "2dsphere"})` index is needed in order to use geo query
 
 ### geo query
-`db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}}}})` geo query\
-`db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}, $maxDistance: 500, $minDistance: 10}}})` find places with the max and
+`db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}}}})` geo query
+```js
+db.places.find({location: {$near: {$geometry: {type: "Point", coordinates: [-122.471114, 37.771104]}, $maxDistance: 500, $minDistance: 10}}})
+```
+find places with the max and
 min distance radius in sorted way\
-`db.places.find({location: {$geoWithin: {$centerSphere: [[-122.46203, 37.77286], 1 / 6378.1]}}})` find places in radius 1km from center in unsorted order
+```js
+db.places.find({location: {$geoWithin: {$centerSphere: [[-122.46203, 37.77286], 1 / 6378.1]}}})
+```
+find places in radius 1km from center in unsorted order
 
 ### polygon
 `const p1=[-122.4547, 37.77473]`\
@@ -222,9 +234,18 @@ min distance radius in sorted way\
 `const p3=[-122.51026, 37.76411]`\
 `const p4=[-122.51088, 37.77131]`
 
-`db.places.find({location: {$geoWithin: {$geometry: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}}}})` query for all places inside the polygon\
-`db.areas.insertOne({name: "Golden Gate Park", area: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}})` insert area into the database\
-`db.areas.find({area: {$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.76992]}}}})` check if point is inside area
+```js
+db.places.find({location: {$geoWithin: {$geometry: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}}}})
+```
+query for all places inside the polygon\
+```js
+db.areas.insertOne({name: "Golden Gate Park", area: {type: "Polygon", coordinates: [[p1, p2, p3, p4, p1]]}})
+```
+insert area into the database\
+```js
+db.areas.find({area: {$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.76992]}}}})
+```
+check if point is inside area
 
 # Aggregation
 [Docs](https://docs.mongodb.com/manual/core/aggregation-pipeline/)\
@@ -242,7 +263,10 @@ match - filtering step\
 group - group by state and sum number of persons by state\
 sort - sort the output in descending order
 
-`{$group: {_id: { gender: "$gender"}, totalPersons: {$sum: 1}, averageAge: {$avg: "$dob.age"}}},` group by gender and sum persons and calculate average
+```js
+{$group: {_id: { gender: "$gender"}, totalPersons: {$sum: 1}, averageAge: {$avg: "$dob.age"}}},
+```
+group by gender and sum persons and calculate average
 
 ### Projection
 ```js
