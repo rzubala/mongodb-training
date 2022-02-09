@@ -1,4 +1,4 @@
-[udemy](udemy.com/course/mongodb-the-complete-developers-guide)
+[udemy](https://www.udemy.com/course/mongodb-the-complete-developers-guide/learn/)
 
 # Basic commands
 
@@ -493,7 +493,7 @@ check if point is inside area
 
 # Aggregation
 [Docs](https://docs.mongodb.com/manual/core/aggregation-pipeline/)\
-[$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
+[$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)\
 [optimistation]( https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)
 
 Data:
@@ -700,7 +700,7 @@ displays second page of top 10 oldest men
 ```
 stores the result of the pipeline to collection
 
-### geonear
+### geoNear
 ```js
 db.transformedPersons.aggregate([
   { $geoNear: {
@@ -713,3 +713,12 @@ db.transformedPersons.aggregate([
 ])
 ```
 `$geoNear` must be the first stage in pipeline
+
+# Numbers
+[Float vs Double vs Decimal](https://stackoverflow.com/questions/618535/difference-between-decimal-float-and-double-in-net)\
+[Number Ranges](https://social.msdn.microsoft.com/Forums/vstudio/en-US/d2f723c7-f00a-4600-945a-72da23cbc53d/can-anyone-explain-clearly-about-float-vs-decimal-vs-double-?forum=csharpgeneral)\
+[Modelling Number/ Monetary Data in MongoDB](https://docs.mongodb.com/manual/tutorial/model-monetary-data/)
+
+NumberInt("1") int32\
+NumberLong("1") int64\
+NumberDecimal("0.3") 128bit high precision float
