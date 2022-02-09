@@ -3,7 +3,8 @@
 # Basic commands
 
 `show dbs` show databases\
-`use flights` swith to database flights
+`use flights` swith to database flights\
+`show collections` show database collections
 
 To get rid of your data, you can simply load the database you want to get rid of (`use databaseName`) and then execute `db.dropDatabase()`.
 Similarly, you could get rid of a single collection in a database via `db.myCollection.drop()`.
@@ -493,6 +494,7 @@ check if point is inside area
 # Aggregation
 [Docs](https://docs.mongodb.com/manual/core/aggregation-pipeline/)\
 [$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
+[optimistation]( https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)
 
 Data:
 ```js
@@ -616,7 +618,7 @@ db.friends.aggregate([
   { $group: {_id: {age: "$age"}, allHobbies: {$push: "$hobbies"}}}
 ])
 ```
-- `$unwind` flattend the array
+- `$unwind` flat the array
 - merge hobbies into single array when groupping, `$push` merge items from documents
 - `$addToSet` removes duplicates, `$push` allows duplicates
 
@@ -680,3 +682,34 @@ db.persons.aggregate([
 ])
 ```
 `bucketAuto` automatically divides the persons in 5 groups (buckets)
+
+### example
+```js
+db.persons.aggregate([
+  { $match: {gender: "male"}},
+  { $project: { _id:0, name: {$concat: ["$name.first", " ", "$name.last"]}, birthdate: {$toDate: "$dob.date"}}},
+  { $sort: {birthdate: 1}},
+  { $skip: 10},
+  { $limit: 10 }
+])
+```
+displays second page of top 10 oldest men
+
+```js
+{$out: "transformedPersons"}
+```
+stores the result of the pipeline to collection
+
+### geonear
+```js
+db.transformedPersons.aggregate([
+  { $geoNear: {
+    near: {type: "Point", coordinates: [ 14.02, 18.26 ]},
+    maxDistance: 100000,    
+    query: { age: {$gt: 30} },
+    distanceField: "distance"
+  }},
+  { $limit: 10}
+])
+```
+`$geoNear` must be the first stage in pipeline
