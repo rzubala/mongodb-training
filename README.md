@@ -1,3 +1,5 @@
+[udemy](udemy.com/course/mongodb-the-complete-developers-guide)
+
 # Basic commands
 
 `show dbs` show databases\
@@ -492,6 +494,44 @@ check if point is inside area
 [Docs](https://docs.mongodb.com/manual/core/aggregation-pipeline/)\
 [$cond](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
 
+Data:
+```js
+{
+  _id: ObjectId("620183674749d836296de934"),
+  gender: 'male',
+  name: { title: 'mr', first: 'elijah', last: 'lewis' },
+  location: {
+    street: '2623 paddock way',
+    city: 'virginia beach',
+    state: 'wyoming',
+    postcode: 54880,
+    coordinates: { latitude: '-42.6128', longitude: '-18.5996' },
+    timezone: { offset: '+3:30', description: 'Tehran' }
+  },
+  email: 'elijah.lewis@example.com',
+  login: {
+    uuid: '2292b7c7-a9bf-4341-abbd-c5841444ab6e',
+    username: 'angrygorilla267',
+    password: 'toonarmy',
+    salt: 'DUtMcvWR',
+    md5: '258eaa742373ee70976d53d1b84d4764',
+    sha1: '62f168f38fa3f6efbd815b58518775d3c6cf0080',
+    sha256: 'a4ab496047b9de7df39adbdabfecc813b8da428087029c94c2b748cef092f85e'
+  },
+  dob: { date: '1986-03-29T06:40:18Z', age: 32 },
+  registered: { date: '2007-12-24T10:32:11Z', age: 10 },
+  phone: '(187)-486-3727',
+  cell: '(986)-974-0857',
+  id: { name: 'SSN', value: '127-66-9786' },
+  picture: {
+    large: 'https://randomuser.me/api/portraits/men/57.jpg',
+    medium: 'https://randomuser.me/api/portraits/med/men/57.jpg',
+    thumbnail: 'https://randomuser.me/api/portraits/thumb/men/57.jpg'
+  },
+  nat: 'US'
+}
+```
+
 ### Pipeline
 ```js
 db.persons.aggregate([
@@ -537,11 +577,106 @@ db.persons.aggregate([
       { $substrCP: ["$name.last", 1, { $subtract: [ {$strLenCP: "$name.last"}, 1 ]}] },
     ],},
   },},
+  { $group: {_id: {birthYear: {$isoWeekYear: "$birthdate" }}, numPersons: {$sum: 1 }}},
+  { $sort: {numPersons: -1}}      
 ]);
 ```
 cascade projection:
 - convert the location to GeoJson and convert string to number
 - convert string to date
 - concat first and last name to full name and covert first letter to uppercase
+- group by year of birth `$isoWeekYear`
+- sort by number of persons in DESC order
 
+### Shortcuts
+```js
+birthdate: {$convert: {input: "$dob.date", to: "date"}},
+birthdate: {$toDate: "$dob.date"},
+```
+and others
 
+### Arrays
+Data:
+```js
+{
+  _id: ObjectId("62036e11be1c9b98900273cd"),
+  name: 'Max',
+  hobbies: [ 'Sports', 'Cooking' ],
+  age: 29,
+  examScores: [
+    { difficulty: 4, score: 57.9 },
+    { difficulty: 6, score: 62.1 },
+    { difficulty: 3, score: 88.5 }
+  ]
+}
+```
+```js
+db.friends.aggregate([
+  { $unwind: "$hobbies" },
+  { $group: {_id: {age: "$age"}, allHobbies: {$push: "$hobbies"}}}
+])
+```
+- `$unwind` flattend the array
+- merge hobbies into single array when groupping, `$push` merge items from documents
+- `$addToSet` removes duplicates, `$push` allows duplicates
+
+```js
+db.friends.aggregate([
+  { $project: {_id: 0, examScore: {$slice: ["$examScores", 1, 1]}}}
+])
+```
+`$slice` slice opperator on an array to create subArray starting from index. When index is negative than it starts from end. The third element is the length
+```js
+db.friends.aggregate([
+  { $project: {_id: 0, numScores: {$size: "$examScores"}}}
+])
+```
+returns the length of the array
+```js
+db.friends.aggregate([
+  { $project: {
+    _id: 0, 
+    examScores: { $filter: { input: "$examScores", as: "sc", cond: { $gt: ["$$sc.score", 60] } } } }
+  }
+])
+```
+it uses for projection the `examScores.score` values that are greater than 60. `$$sc` refers to local variable defined in `as`
+```js
+db.friends.aggregate([
+  { $unwind: "$examScores" },
+  { $project: {_id: 1, name: 1, age: 1, score: "$examScores.score"}},
+  { $sort: {score: -1 }},
+  { $group: {_id: "$_id", name: {$first: "$name"}, maxScore: {$max: "$score"}} },
+  { $sort: {maxScore: -1}}
+])
+```
+retrieves the max score per person. `$first` returns the first element encountered in group
+
+### Data analytics 
+```js
+db.persons.aggregate([
+  { $bucket: { 
+    groupBy: "$dob.age", 
+    boundaries: [18, 30, 40, 50, 60, 120], 
+    output: {
+      numPersons: {$sum: 1},
+      averageAge: {$avg: "$dob.age"},
+      //names: { $push: "$name.first"}
+    }}}
+])
+```
+`bucket` groups persons by age ranges and displays number of persons in each group and calc the average
+```js
+db.persons.aggregate([
+  { $bucketAuto: {
+    groupBy: "$dob.age",
+    buckets: 5,
+    output: {
+      numPersons: {$sum: 1},
+      averageAge: {$avg: "$dob.age"},
+      //names: { $push: "$name.first"}
+    }    
+  }}
+])
+```
+`bucketAuto` automatically divides the persons in 5 groups (buckets)
