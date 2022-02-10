@@ -786,3 +786,28 @@ to grant user `appdev` role `readWrite` to other database `blog`. Only `admin` s
 `mongod -f mongod.cfg --fork --sslMode requireSSL -sslPEMKeyFile mongodb.pem` start server with ssl\
 `mongosh --ssl --sslCAFile mongodb.pem --host localhost` start shell with ssl
 
+# Performance, Fault tolerancy, Atlas (deployment)
+[Replica Sets](https://docs.mongodb.com/manual/replication/)\
+[Sharding](https://docs.mongodb.com/manual/sharding/)
+
+### Capped collections
+collections with limit of the document number, old documents will be deleted when the size exceds, e.g. logs, caching data
+```js
+db.createCollection("capped", {capped: true, size:10000, max: 3})
+```
+creates such collection, where only 3 documents are allowed
+
+### Replica sets
+Primary Node and Secondary Nodes which are Replica Sets. We work with Primary Node but behind the scenes mongodb asynchronously replicates the data to secondary nodes. Read request can talk also to Secondary Nodes, write request work only with Primary Node.
+
+### Sharding - Horizontal Scaling
+More servers, which splits data, servers stores different chunks. The servers work together, data is distributed across shards and not replicated among nodes.
+`mongos` is a router which handles the request to the correct server/shard.
+`Shard key` is a key which keeps the information about to which server/shard the document belongs.\
+When query `find` does not have `Shard key` than the `mongos` sends the broadcast info and ask all shards for the data.
+
+### Atlas
+[Atlas](https://cloud.mongodb.com)
+
+
+
