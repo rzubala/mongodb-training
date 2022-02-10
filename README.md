@@ -724,4 +724,65 @@ db.transformedPersons.aggregate([
 `NumberDecimal("0.3")` 128bit high precision float
 
 # Security
+[Encryption at Rest](https://docs.mongodb.com/manual/core/security-encryption-at-rest/)\
+[Security Checklist](https://docs.mongodb.com/manual/administration/security-checklist/)\
+[What is SSL/ TLS?](https://www.acunetix.com/blog/articles/tls-security-what-is-tls-ssl-part-1/)\
+[SSL Setup](https://docs.mongodb.com/manual/tutorial/configure-ssl/)\
+[Users & Auth Docs](https://docs.mongodb.com/manual/core/authentication/)\
+[Roles](https://docs.mongodb.com/manual/core/security-built-in-roles/)\
+[Custom Roles](https://docs.mongodb.com/manual/core/security-user-defined-roles/)
+
+`mongod -f ../mongod.cfg --fork --auth` starts server with authentication\
+`mongosh -u rafal -p raf --authenticationDatabase admin` starts shell with admin\
+`mongosh -u appdev -p dev --authenticationDatabase shop` starts shell with user\
+`db.auth("rafal", "raf")` or login from the shell
+
+### Roles
+Database User: `read`, `readWrite`\
+Database Admin: `dbAdmin`, `userAdmin`, `dbOwner`\
+All Database Roles: `readAnyDatabase`, `readWriteAnyDatabse`, `userAdminAnyDatabase`, `dbAdminAnyDatabase`\
+Cliuster Admin: `clusterManager`, `clusterMonitor`, `hostManager`, `clusterAdmin`\
+Backup/Rester: `backup`, `restore`\
+Superuser: `dbOwner`, `userAdmin`, `userAdminAnyDatabse`, `root`
+
+### Create the user
+`createUser()`, `updateUser()`
+
+```js
+use admin
+db.createUser({user: "rafal", pwd: "raf", roles: ["userAdminAnyDatabase"]})
+```
+it will create the admin
+
+```js
+use shop
+db.createUser({user: 'appdev', pwd: 'dev', roles: ["readWrite"]})
+```
+create new user in shop database
+
+```js
+db.logout()
+db.auth("rafal", "raf")
+use shop
+db.updateUser("appdev", {roles: ["readWrite", {role: "readWrite", db: "blog"}]})
+db.getUser("appdev")
+{
+  _id: 'shop.appdev',
+  userId: UUID("2cbc75d6-3cb9-473c-97c7-f42ef4be97ea"),
+  user: 'appdev',
+  db: 'shop',
+  roles: [
+    { role: 'readWrite', db: 'shop' },
+    { role: 'readWrite', db: 'blog' }
+  ],
+  mechanisms: [ 'SCRAM-SHA-1', 'SCRAM-SHA-256' ]
+}
+```
+to grant user `appdev` role `readWrite` to other database `blog`. Only `admin` switching to the database `shop` can do it.
+
+### Cert
+`openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out mongodb-cert.crt -keyout mongodb-cert.key` generate the cert\
+`cat mongodb-cert.key mongodb-cert.crt > mongodb.pem` create pem file\
+`mongod -f mongod.cfg --fork --sslMode requireSSL -sslPEMKeyFile mongodb.pem` start server with ssl\
+`mongosh --ssl --sslCAFile mongodb.pem --host localhost` start shell with ssl
 
