@@ -803,11 +803,23 @@ Primary Node and Secondary Nodes which are Replica Sets. We work with Primary No
 ### Sharding - Horizontal Scaling
 More servers, which splits data, servers stores different chunks. The servers work together, data is distributed across shards and not replicated among nodes.
 `mongos` is a router which handles the request to the correct server/shard.
-`Shard key` is a key which keeps the information about to which server/shard the document belongs.\
+`Shard key` is a key which keeps the information about to which server/shard the document belongs.
 When query `find` does not have `Shard key` than the `mongos` sends the broadcast info and ask all shards for the data.
 
 ### Atlas
 [Atlas](https://cloud.mongodb.com)
 
+# Transactions
+[Transactions](https://docs.mongodb.com/manual/core/transactions/)
 
-
+`session` all request ara groupped logically
+```js
+const session = db.getMongo().startSession()
+session.startTransaction()
+const usersC = session.getDatabase("blog").users
+const postsC = session.getDatabase("blog").posts
+postsC.deleteMany({userId: ObjectId("62056a1a77b44e983d2212a7")})
+usersC.deleteOne({_id: ObjectId("62056a1a77b44e983d2212a7")})
+session.commitTransaction()
+```
+`session.abortTransaction()` to abort transaction
