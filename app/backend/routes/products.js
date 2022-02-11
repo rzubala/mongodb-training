@@ -84,7 +84,7 @@ router.get('/', (req, res, next) => {
     .skip((queryPage - 1) * pageSize)
     .limit(pageSize)
     .forEach(productDoc => {
-        console.log(productDoc)  
+        //console.log(productDoc)  
         productDoc.price = productDoc.price.toString()      
         products.push(productDoc)
     })
