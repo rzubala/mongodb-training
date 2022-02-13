@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Decimal128, ObjectId } from 'bson'
+import { Stitch, RemoteMongoClient } from 'mongodb-stitch-browser-sdk'
 
 import './EditProduct.css';
 import Input from '../../components/Input/Input';
@@ -17,14 +18,30 @@ class ProductEditPage extends Component {
   componentDidMount() {
     // Will be "edit" or "add"
     if (this.props.match.params.mode === 'edit') {
-      axios
-        .get('http://localhost:3100/products/' + this.props.match.params.id)
-        .then(productResponse => {
-          const product = productResponse.data;
+      // axios
+      //   .get('http://localhost:3100/products/' + this.props.match.params.id)
+      //   .then(productResponse => {
+      //     const product = productResponse.data;
+      //     this.setState({
+      //       isLoading: false,
+      //       title: product.name,
+      //       price: product.price.toString(),
+      //       imageUrl: product.image,
+      //       description: product.description
+      //     });
+      //   })
+      //   .catch(err => {
+      //     this.setState({ isLoading: false });
+      //     console.log(err);
+      //   });
+      const mongodb = Stitch.defaultAppClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+      mongodb.db("shop").collection("products").findOne({_id: new ObjectId(this.props.match.params.id) })
+        .then(product => {
+          product.price = product.price.toString()
           this.setState({
             isLoading: false,
             title: product.name,
-            price: product.price.toString(),
+            price: product.price,
             imageUrl: product.image,
             description: product.description
           });
@@ -32,7 +49,8 @@ class ProductEditPage extends Component {
         .catch(err => {
           this.setState({ isLoading: false });
           console.log(err);
-        });
+        })
+
     } else {
       this.setState({ isLoading: false });
     }
@@ -51,21 +69,26 @@ class ProductEditPage extends Component {
     this.setState({ isLoading: true });
     const productData = {
       name: this.state.title,
-      price: parseFloat(this.state.price),
+      price: Decimal128.fromString(this.state.price.toString()),
       image: this.state.imageUrl,
       description: this.state.description
     };
     let request;
     if (this.props.match.params.mode === 'edit') {
-      request = axios.patch(
-        'http://localhost:3100/products/' + this.props.match.params.id,
-        productData
-      );
+      // request = axios.patch(
+      //   'http://localhost:3100/products/' + this.props.match.params.id,
+      //   productData
+      // );
+      const mongodb = Stitch.defaultAppClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+      request = mongodb.db("shop").collection("products").updateOne({_id: new ObjectId(this.props.match.params.id)}, {$set: productData})
     } else {
-      request = axios.post('http://localhost:3100/products', productData);
+      //request = axios.post('http://localhost:3100/products', productData);
+      const mongodb = Stitch.defaultAppClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+      request = mongodb.db("shop").collection("products").insertOne(productData)
     }
     request
       .then(result => {
+        console.log(result)
         this.setState({ isLoading: false });
         this.props.history.replace('/products');
       })

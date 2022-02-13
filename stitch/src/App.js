@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Stitch, AnonymousCredential } from 'mongodb-stitch-browser-sdk'
+import { Stitch, UserPasswordAuthProviderClient, UserPasswordCredential } from 'mongodb-stitch-browser-sdk'
 
 import Header from './components/Header/Header';
 import Modal from './components/Modal/Modal';
@@ -13,15 +13,15 @@ import ConfirmAccountPage from './pages/Auth/ConfirmAccount';
 
 class App extends Component {
   state = {
-    isAuth: true,
+    isAuth: false,
     authMode: 'login',
     error: null
   };
 
   constructor() {
     super()
-    const client = Stitch.initializeDefaultAppClient("myshop-pqaex")
-    client.auth.loginWithCredential(new AnonymousCredential())
+    this.client = Stitch.initializeDefaultAppClient("myshop-pqaex")
+    this.client.callFunction("Greet", ['Rafał'])
   }
 
   logoutHandler = () => {
@@ -33,6 +33,26 @@ class App extends Component {
     if (authData.email.trim() === '' || authData.password.trim() === '') {
       return;
     }
+    let request;
+    if (this.state.authMode === 'login') {
+      const credential = new UserPasswordCredential(authData.email, authData.password)
+      request = this.client.auth.loginWithCredential(credential)
+    } else {
+      const emailPassClient = this.client.auth.getProviderClient(UserPasswordAuthProviderClient.factory)
+      request = emailPassClient.registerWithEmail(authData.email, authData.password)  
+    }
+    request.then((result) => {
+      console.log(result)
+      if (result) {
+        this.setState({ isAuth: true });
+      }
+    })
+    .catch(err => {
+      this.errorHandler("An error occured");
+      console.log(err);
+      this.setState({ isAuth: false });
+    });
+
     // let request;
     // if (this.state.authMode === 'login') {
     //   request = axios.post('http://localhost:3100/login', authData);
